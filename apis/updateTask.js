@@ -36,29 +36,38 @@ const updateTask = async (req, res) => {
                 { new: true } // Return the updated document
               );
         }
+        if(assignedTo === user.email){
+          return res.status(404).json({message:"You Cannot Assign Task To Yourself"});
+        }
         if(assignedTo!== undefined){
-            if (userId === task.admin) {
+
+            if (userId === task.admin.toString()) {
                 const previousAssignedUser = await User.findById(task.assignedTo);
                   const newAssignedUser = await User.findOne({ email: assignedTo });
-          
+        
+
                   if (!newAssignedUser) {
                     return res.status(404).json({ message: "New assigned user not found" });
                   }
           
                   // Update task
-                  await Task.findOneAndUpdate(
-                    { _id: taskId },
+                 const taskAssigned = await Task.findOneAndUpdate(
+                    { _id: task._id },
                     { assignedTo: newAssignedUser._id },
                     { new: true } // Return the updated document
                   );
-          
+
                   // Remove task from previous assignee's assignedUsers (if it exists)
-                  if (previousAssignedUser) {
+                  if (previousAssignedUser && task.assignedTo!== null) {
                     await User.findByIdAndUpdate(
-                      previousAssignedUser._id,
-                      { $pull: { tasks: taskId } } // Remove task using pull operator
+                      {_id: previousAssignedUser._id},
+                      { $pull: { tasks: taskAssigned._id } } // Remove task using pull operator
                     );
+                    await newAssignedUser.tasks.push(task._id);
+                  }else{
+                    await newAssignedUser.tasks.push(task._id);
                   }
+                  await newAssignedUser.save();
                 } else{
                 return res.status(404).json({ msg: "Oops, You Dont Have Access To Update Assigned User" });
             }

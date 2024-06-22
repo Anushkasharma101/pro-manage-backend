@@ -9,7 +9,7 @@ const updateUserDetails = require("../apis/updateUserDetails.js");
 const getUserDetails = require("../apis/getUserDetails.js");
 
 router.post('/login',userLogin);
-router.post('/register',userRegister);
+router.patch('/register',userRegister);
 router.post('/assignedUser',verifyToken, assignUser);
 router.patch('/updateUserDetails',verifyToken,updateUserDetails);
 router.get('/getUserDetails',verifyToken,getUserDetails);

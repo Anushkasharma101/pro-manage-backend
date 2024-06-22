@@ -14,31 +14,35 @@ const assignUser = async (req, res) => {
     if (!admin) {
         return res.status(404).json({ message: 'Admin Not Found' });
     }
+    if(admin.email === email){
+      return res.status(500).json({msg:"You cannot Assign to Yourself"});
+    }
     for(let i=0;i<admin.assignedUsers.length;i++){
       if(email === admin.assignedUsers[i]){
         return res.status(404).json({ message: 'User Already Added' });
       }
     }
-
-    if (!user) {
+console.log('userrrrrr',user);
+    if (user === null) {
         const newUser = new User({
             email,
             password:'no password'
           });
 
-          admin.assignedUsers.push(newUser.email);
-          newUser.save()
+          await admin.assignedUsers.push(newUser.email);
+          await newUser.save()
 
     }else{
-        admin.assignedUsers.push(user.email);
+       await admin.assignedUsers.push(user.email);
     }
       
-      admin.save();
+      await admin.save();
       // Include the token in the response
-      res.status(200).send({ msg: "User Assigned Successfully" });
+      return res.status(200).send({ msg: "User Assigned Successfully" });
     } catch (error) {
-      res.status(400).send(error);
       console.log(error);
+      return res.status(400).send(error);
+      
     }
   };
 
