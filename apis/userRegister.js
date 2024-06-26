@@ -1,6 +1,7 @@
 const User = require("../models/userDB");
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const userRegister = async (req, res) => {
@@ -11,7 +12,7 @@ const userRegister = async (req, res) => {
     //   console.log(hashedPassword)
   const alreadyUser = await User.findOne({email});
   const alreadyUserName = await User.findOne({username});
-
+  let token = "";
 if(alreadyUserName){
   return res.status(404).json({message:"Username Already Exists"});
 }
@@ -22,6 +23,7 @@ if(alreadyUserName){
   alreadyUser.username = username;
   alreadyUser.password =  hashedPassword;
   alreadyUser.save();
+  token = jwt.sign({ userId: alreadyUser._id }, `${process.env.SECREAT_KEY}`);
   }else{
     const user = new User({
       username,
@@ -30,13 +32,12 @@ if(alreadyUserName){
     });
    
     await user.save();
-    
+    token = jwt.sign({ userId: user._id }, `${process.env.SECREAT_KEY}`);
+
   }
       
- 
-      // Include the token in the response
-      console.log("successfully created user");
-      return res.status(200).json({ msg: "user created successfully" });
+
+      return res.status(200).json({ message: "user created successfully",token});
     } catch (error) {
         console.log(error)
       return res.status(400).send(error);
