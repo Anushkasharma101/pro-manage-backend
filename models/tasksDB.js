@@ -18,6 +18,10 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    currentDate: {
+        type:Date,
+        default: new Date()
+    },
     checkList: [{
             checked:{
                 type: Boolean,
