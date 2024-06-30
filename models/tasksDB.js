@@ -10,6 +10,10 @@ const taskSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    assignedToEmail: {
+        type:String,
+        default: null
+    },
     priority: {
         type: String,
         required: true

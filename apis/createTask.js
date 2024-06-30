@@ -17,6 +17,7 @@ const createTask = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
+
     let assignedUserId = null;
     if (assignedTo !== null) {
       const assignedUser = await User.findOne({ email : assignedTo });
@@ -33,6 +34,7 @@ const createTask = async (req, res) => {
     const task = new Task({
       admin: user._id,
       assignedTo: assignedUserId,
+      assignedToEmail:assignedTo,
       priority,
       title,
       checkList,

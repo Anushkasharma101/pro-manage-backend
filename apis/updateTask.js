@@ -6,7 +6,6 @@ dotenv.config();
 const updateTask = async (req, res) => {
 
     try {
-
         const taskId = req.params.id;
         const userId = req.user.userId;
         const { title, priority, assignedTo, checkList, dueDate,} = req.body;
@@ -40,7 +39,7 @@ const updateTask = async (req, res) => {
           return res.status(404).json({message:"You Cannot Assign Task To Yourself"});
         }
         if(assignedTo!== undefined){
-
+          task.assignedToEmail = assignedTo;
             if (userId === task.admin.toString()) {
                 const previousAssignedUser = await User.findById(task.assignedTo);
                   const newAssignedUser = await User.findOne({ email: assignedTo });
