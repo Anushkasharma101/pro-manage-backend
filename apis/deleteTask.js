@@ -5,7 +5,7 @@ dotenv.config();
 
 const deleteTask = async (req, res) => {
   try {
-    const taskId = req.params.taskId;
+    const taskId = req.params.id;
     const userId = req.user.userId;
 
     // Find the user by ID
@@ -15,7 +15,9 @@ const deleteTask = async (req, res) => {
     }
 
     // Find the task by ID
+    console.log(taskId);
     const task = await Task.findById(taskId);
+    console.log(task);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
