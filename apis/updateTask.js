@@ -38,7 +38,7 @@ const updateTask = async (req, res) => {
         if(assignedTo === user.email){
           return res.status(404).json({message:"You Cannot Assign Task To Yourself"});
         }
-        if(assignedTo!== undefined){
+        if(assignedTo!== undefined && assignedTo!== null){
           task.assignedToEmail = assignedTo;
             if (userId === task.admin.toString()) {
                 const previousAssignedUser = await User.findById(task.assignedTo);
