@@ -39,7 +39,7 @@ const updateTask = async (req, res) => {
           return res.status(404).json({message:"You Cannot Assign Task To Yourself"});
         }
         if(assignedTo!== undefined && assignedTo!== null){
-          task.assignedToEmail = assignedTo;
+          
             if (userId === task.admin.toString()) {
                 const previousAssignedUser = await User.findById(task.assignedTo);
                   const newAssignedUser = await User.findOne({ email: assignedTo });
@@ -55,7 +55,11 @@ const updateTask = async (req, res) => {
                     { assignedTo: newAssignedUser._id },
                     { new: true } // Return the updated document
                   );
-
+                  await Task.findOneAndUpdate(
+                    { _id: task._id },
+                    { assignedToEmail: assignedTo },
+                    { new: true } // Return the updated document
+                  )
                   // Remove task from previous assignee's assignedUsers (if it exists)
                   if (previousAssignedUser && task.assignedTo!== null) {
                     await User.findByIdAndUpdate(
