@@ -9,12 +9,12 @@ const createTask = async (req, res) => {
     const { title, priority, assignedTo = null, checkList, dueDate = null } = req.body;
 
     if (!title || !priority || !checkList) {
-      return res.status(404).json({ message: "Missing Fields" });
+      return res.status(404).json({ error: "Missing Fields" });
     }
     const userId = req.user.userId;
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
+      return res.status(404).json({ error: "User Not Found" });
     }
 
 
@@ -22,10 +22,10 @@ const createTask = async (req, res) => {
     if (assignedTo !== null) {
       const assignedUser = await User.findOne({ email : assignedTo });
       if(assignedTo === user.email){
-        return res.status(404).json({ message: "You cannot assign to yourself" });
+        return res.status(404).json({ error: "You Cannot Assign To Yourself" });
       }
       if (!assignedUser) {
-        return res.status(404).json({ message: "Assigned User Not Found" });
+        return res.status(404).json({ error: "Assigned User Not Found" });
       }
 
       assignedUserId = assignedUser._id;
@@ -52,7 +52,7 @@ const createTask = async (req, res) => {
 
     res.status(200).json({ message: "Task Successfully Created" });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({error:error});
     console.log(error);
   }
 };

@@ -11,7 +11,7 @@ const deleteTask = async (req, res) => {
     // Find the user by ID
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
 
     // Find the task by ID
@@ -19,7 +19,7 @@ const deleteTask = async (req, res) => {
     const task = await Task.findById(taskId);
     console.log(task);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     const adminId = task.admin;
@@ -36,10 +36,10 @@ const deleteTask = async (req, res) => {
     // Delete the task
     await task.deleteOne();
 
-    res.status(200).send({ message: "Deleted Successfully!" });
+    res.status(200).json({ message: "Deleted Successfully!" });
   } catch (error) {
     console.error(error);  // Log error for debugging
-    res.status(500).send({ message: 'An error occurred while deleting the task' });
+    res.status(500).json({ error: 'An error occurred while deleting the task' });
   }
 };
 

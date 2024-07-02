@@ -9,7 +9,7 @@ const updateCategory = async (req, res) => {
         const taskId = req.params.id;
         const { category } = req.body;
         if (!category) {
-          return res.status(400).send('Category Is Required');
+          return res.status(400).json({error:'Category Is Required'});
         }
           const updatedTask = await Task.findOneAndUpdate(
             { _id: taskId },
@@ -18,13 +18,13 @@ const updateCategory = async (req, res) => {
           );
       
           if (!updatedTask) {
-            return res.status(404).send('Task not found');
+            return res.status(404).json({error:'Task not found'});
           }
-      return res.status(200).json({ msg: "Category Updated Successfully" });
+      return res.status(200).json({ message: "Category Updated Successfully" });
 
     } catch (error) {
         console.log(error)
-      return res.status(400).send(error);
+      return res.status(400).json({error: error});
     }
   };
 

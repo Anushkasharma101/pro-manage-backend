@@ -14,11 +14,11 @@ const userRegister = async (req, res) => {
   const alreadyUserName = await User.findOne({username});
   let token = "";
 if(alreadyUserName){
-  return res.status(404).json({message:"Username Already Exists"});
+  return res.status(404).json({error:"Username Already Exists"});
 }
   if(alreadyUser !== null){
   if(alreadyUser.password !== "no password"){
-    return res.status(404).json({message:"User Already Exists"});
+    return res.status(404).json({error:"User Already Exists"});
   }
   alreadyUser.username = username;
   alreadyUser.password =  hashedPassword;
@@ -40,7 +40,7 @@ if(alreadyUserName){
       return res.status(200).json({ message: "user created successfully",token});
     } catch (error) {
         console.log(error)
-      return res.status(400).send(error);
+      return res.status(400).json({error: error});
     }
   };
 

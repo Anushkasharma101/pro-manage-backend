@@ -12,14 +12,14 @@ const assignUser = async (req, res) => {
     const user = await User.findOne({ email });
     const admin = await User.findById(userId);
     if (!admin) {
-        return res.status(404).json({ message: 'Admin Not Found' });
+        return res.status(404).json({ error: 'Admin Not Found' });
     }
     if(admin.email === email){
-      return res.status(500).json({msg:"You cannot Assign to Yourself"});
+      return res.status(500).json({error:"You cannot Assign to Yourself"});
     }
     for(let i=0;i<admin.assignedUsers.length;i++){
       if(email === admin.assignedUsers[i]){
-        return res.status(404).json({ message: 'User Already Added' });
+        return res.status(404).json({ error: 'User Already Added' });
       }
     }
 console.log('userrrrrr',user);
@@ -38,10 +38,10 @@ console.log('userrrrrr',user);
       
       await admin.save();
       // Include the token in the response
-      return res.status(200).send({ msg: "User Assigned Successfully" });
+      return res.status(200).json({ message: "User Assigned Successfully" });
     } catch (error) {
       console.log(error);
-      return res.status(400).send(error);
+      return res.status(400).json({error:error});
       
     }
   };

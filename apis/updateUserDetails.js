@@ -14,7 +14,7 @@ const updateUserDetails = async (req, res) => {
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: 'Old Password Is Incorrect' });
+      return res.status(401).json({ error: 'Old Password Is Incorrect' });
     }}
 
     if(username){
@@ -29,10 +29,10 @@ const updateUserDetails = async (req, res) => {
       await user.save();
       // Include the token in the response
       console.log("successfully updated user", user);
-      return res.status(200).json({ msg: "User Updated Successfully" });
+      return res.status(200).json({ message: "User Updated Successfully" });
     } catch (error) {
         console.log(error)
-      return res.status(400).send(error);
+      return res.status(400).json({error:error});
     }
   };
 

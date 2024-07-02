@@ -8,16 +8,16 @@ const updateTask = async (req, res) => {
     try {
         const taskId = req.params.id;
         const userId = req.user.userId;
-        const { title, priority, assignedTo, checkList, dueDate,} = req.body;
+        const { title, priority, assignedTo, checkList, dueDate} = req.body;
         const task = await Task.findById(taskId);
         const user = await User.findById(userId);
 
         if(!user){
-            return res.status(404).json({message: "User not found"});
+            return res.status(404).json({error: "User not found"});
         }
 
         if(!task){
-            return res.status(404).json({message:"Task Not Found"});
+            return res.status(404).json({error:"Task Not Found"});
         }
 
         if(title!== undefined){
@@ -36,7 +36,7 @@ const updateTask = async (req, res) => {
               );
         }
         if(assignedTo === user.email){
-          return res.status(404).json({message:"You Cannot Assign Task To Yourself"});
+          return res.status(404).json({error:"You Cannot Assign Task To Yourself"});
         }
         if(assignedTo!== undefined && assignedTo!== null){
           
@@ -46,7 +46,7 @@ const updateTask = async (req, res) => {
         
 
                   if (!newAssignedUser) {
-                    return res.status(404).json({ message: "New assigned user not found" });
+                    return res.status(404).json({ error: "New assigned user not found" });
                   }
           
                   // Update task
@@ -72,7 +72,7 @@ const updateTask = async (req, res) => {
                   }
                   await newAssignedUser.save();
                 } else{
-                return res.status(404).json({ msg: "Oops, You Dont Have Access To Update Assigned User" });
+                return res.status(404).json({ error: "Oops, You Dont Have Access To Update Assigned User" });
             }
         }
             
@@ -92,11 +92,11 @@ const updateTask = async (req, res) => {
               );
         }
           
-      return res.status(200).json({ msg: "Task Updated Successfully" });
+      return res.status(200).json({ message: "Task Updated Successfully" });
 
     } catch (error) {
         console.log(error)
-      return res.status(400).send(error);
+      return res.status(400).json({error:error});
     }
   };
 

@@ -11,7 +11,7 @@ const userLogin = async (req, res) => {
       // Find the user by email
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ error: 'User not found' });
       }
   
       // Compare the entered password with the hashed password in the database
@@ -26,7 +26,7 @@ const userLogin = async (req, res) => {
       res.status(200).send({token});
 
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).json({error:error});
     }
   };
 

@@ -7,13 +7,13 @@ const updateCheckMark = async (req, res) => {
     const taskId = req.params.id;
     const { indexOfCheck } = req.body;
     if (indexOfCheck === undefined) {
-      return res.status(400).send("Index Of Check Is Required");
+      return res.status(400).json({error: "Index Of Check Is Required"});
     }
     
     const task = await Task.findById(taskId);
 
     if (!task) {
-      return res.status(404).send("Task not found");
+      return res.status(404).json({error:"Task Not Found"});
     }
 
     if (indexOfCheck >= task.checkList.length || indexOfCheck < 0) {
@@ -23,11 +23,11 @@ const updateCheckMark = async (req, res) => {
       !task.checkList[indexOfCheck].checked;
 
     await task.save();
-    return res.status(200).json({ msg: "Check/Uncheck Successfully" });
+    return res.status(200).json({ Message: "Check/Uncheck Successfully" });
 
   } catch (error) {
     console.log(error);
-    return res.status(400).send(error);
+    return res.status(400).json({error: error});
   }
 };
 
